@@ -1,4 +1,5 @@
 ﻿using MaterialDesignThemes.Wpf;
+using Menu_Navigation_Example.Models;
 using Menu_Navigation_Example.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -47,12 +48,38 @@ namespace Menu_Navigation_Example
                 new MenuItemViewModel { Header = "menu3" }
             };
 
+            Items = new List<MultiSelectComboBoxItem>()
+            {
+                new MultiSelectComboBoxItem()
+                {
+                    Key = "Trichy",
+                    Value = "TPJ"
+                },
+                new MultiSelectComboBoxItem()
+                {
+                    Key = "Chennai",
+                    Value = "MAS"
+                },
+                new MultiSelectComboBoxItem()
+                {
+                    Key = "Bangalore",
+                    Value = "SBC"
+                },
+                new MultiSelectComboBoxItem()
+                {
+                    Key = "Coimbatore",
+                    Value = "CBE"
+                }
+            };
 
+            SelectedItems = new List<MultiSelectComboBoxItem>();
             InitializeComponent();
 
             this.DataContext = this;
         }
 
+        public List<MultiSelectComboBoxItem> Items { get; set; }
+        public List<MultiSelectComboBoxItem> SelectedItems { get; set; }
         public List<MenuItemViewModel> MenuItems { get; set; }
 
         private void MenuDarkModeButton_Click(object sender, RoutedEventArgs e)
@@ -65,6 +92,11 @@ namespace Menu_Navigation_Example
 
             theme.SetBaseTheme(isDarkTheme ? Theme.Dark : Theme.Light);
             paletteHelper.SetTheme(theme);
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            var a = SelectedItems;
         }
     }
 }
