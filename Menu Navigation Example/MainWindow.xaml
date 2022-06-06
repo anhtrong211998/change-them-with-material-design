@@ -150,7 +150,7 @@
                     <control:MultiSelectComboBox Grid.Row="2"
                                      BorderThickness="1"
                                      ItemsSource="{Binding Items}" 
-                                     SelectedItems="{Binding SelectedItems}"
+                                     SelectedValues="{Binding SelectedItems}"
                                      SelectedValuePath="Key" 
                                      DisplayMemberPath="Value"
                                      materialDesign:HintAssist.Hint="WeeklyWorkingTime"

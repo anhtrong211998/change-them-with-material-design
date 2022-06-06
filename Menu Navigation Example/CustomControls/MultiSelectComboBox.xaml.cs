@@ -45,6 +45,13 @@ namespace Menu_Navigation_Example.CustomControls
                     new FrameworkPropertyMetadata(null,
                         new PropertyChangedCallback(MultiSelectComboBox.OnSelectedItemsChanged)));
 
+        public static readonly DependencyProperty SelectedValuesProperty =
+                DependencyProperty.Register("SelectedValues",
+                    typeof(List<string?>),
+                    typeof(MultiSelectComboBox),
+                    new FrameworkPropertyMetadata(null,
+                        new PropertyChangedCallback(MultiSelectComboBox.OnSelectedValuesChanged)));
+
         public static readonly DependencyProperty SelectedValuePathProperty =
                 DependencyProperty.Register("SelectedValuePath",
                     typeof(string),
@@ -91,6 +98,15 @@ namespace Menu_Navigation_Example.CustomControls
             }
         }
 
+        public List<string?> SelectedValues
+        {
+            get { return (List<string?>)GetValue(SelectedValuesProperty); }
+            set
+            {
+                SetValue(SelectedValuesProperty, value);
+            }
+        }
+
         public string Text
         {
             get
@@ -122,6 +138,13 @@ namespace Menu_Navigation_Example.CustomControls
         {
             MultiSelectComboBox control = (MultiSelectComboBox)d;
             control.SelectNodes();
+            control.SetText();
+        }
+
+        private static void OnSelectedValuesChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+        {
+            MultiSelectComboBox control = (MultiSelectComboBox)d;
+            control.SelectValuesNodes();
             control.SetText();
         }
 
@@ -168,7 +191,34 @@ namespace Menu_Navigation_Example.CustomControls
                 return;
             foreach (var node in _nodeList)
             {
-                node.IsSelected = SelectedItems.Cast<object>().Any(x => x.GetType().GetProperties().FirstOrDefault(y => y.Name == SelectedValuePath).GetValue(x)?.ToString() == node.Key);
+                node.IsSelected = SelectedItems.Cast<object>().Any(x => x.GetType()
+                                            .GetProperties().FirstOrDefault(y => y.Name == SelectedValuePath)?
+                                            .GetValue(x)?.ToString() == node.Key);
+            }
+        }
+
+        private void SelectValuesNodes()
+        {
+            if (SelectedValues == null || SelectedValues.Count == 0)
+                return;
+       
+            var selectedNodes = _nodeList.Where(x => SelectedValues.Contains(x.Key)).ToList();
+
+            if (SelectedItems == null)
+            {
+                var listType = this.ItemsSource.GetType();
+                var instance = Activator.CreateInstance(listType);
+                //typeof()
+                SelectedItems = (IList)instance;
+            }
+
+            SelectedItems.Clear();
+
+            foreach (var node in selectedNodes)
+            {
+                node.IsSelected = true;
+                var item = this.ItemsSource.Cast<object>().FirstOrDefault(x => x.GetType().GetProperties().FirstOrDefault(y => y.Name == SelectedValuePath).GetValue(x)?.ToString() == node.Key);
+                SelectedItems.Add(item);
             }
         }
 
@@ -200,6 +250,7 @@ namespace Menu_Navigation_Example.CustomControls
             }
 
             SelectedItems.Clear();
+            SelectedValues.Clear();
             foreach (Node node in _nodeList)
             {
                 if (node.IsSelected)
@@ -208,6 +259,7 @@ namespace Menu_Navigation_Example.CustomControls
                     {
                         var item = this.ItemsSource.Cast<object>().FirstOrDefault(x => x.GetType().GetProperties().FirstOrDefault(y => y.Name == SelectedValuePath).GetValue(x)?.ToString() == node.Key);
                         SelectedItems.Add(item);
+                        SelectedValues.Add(node.Key);
                     }
 
                 }

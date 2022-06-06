@@ -72,14 +72,18 @@ namespace Menu_Navigation_Example
                 }
             };
 
-            SelectedItems = new List<MultiSelectComboBoxItem>();
+            SelectedItems = new List<string?>()
+            {
+                "Bangalore",
+                "Coimbatore"
+            };
             InitializeComponent();
 
             this.DataContext = this;
         }
 
         public List<MultiSelectComboBoxItem> Items { get; set; }
-        public List<MultiSelectComboBoxItem> SelectedItems { get; set; }
+        public List<string?> SelectedItems { get; set; }
         public List<MenuItemViewModel> MenuItems { get; set; }
 
         private void MenuDarkModeButton_Click(object sender, RoutedEventArgs e)
