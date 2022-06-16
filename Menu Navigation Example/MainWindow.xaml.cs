@@ -81,7 +81,16 @@ namespace Menu_Navigation_Example
         }
 
         public string ValueSelect;
-        public string Text { get; set; }
+
+        private string _text = "aaaa";
+        public string Text {
+            get => _text;
+            set
+            {
+                _text = value;
+            }
+        
+        }
 
         public List<MultiSelectComboBoxItem> Items { get; set; }
 

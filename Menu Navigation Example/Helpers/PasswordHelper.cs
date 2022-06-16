@@ -10,24 +10,9 @@ namespace Menu_Navigation_Example.Helpers
             typeof(string), typeof(PasswordHelper),
             new FrameworkPropertyMetadata(string.Empty, OnPasswordPropertyChanged));
 
-        public static readonly DependencyProperty AttachProperty =
-            DependencyProperty.RegisterAttached("Attach",
-            typeof(bool), typeof(PasswordHelper), new PropertyMetadata(false, Attach));
-
         private static readonly DependencyProperty IsUpdatingProperty =
            DependencyProperty.RegisterAttached("IsUpdating", typeof(bool),
            typeof(PasswordHelper));
-
-
-        public static void SetAttach(DependencyObject dp, bool value)
-        {
-            dp.SetValue(AttachProperty, value);
-        }
-
-        public static bool GetAttach(DependencyObject dp)
-        {
-            return (bool)dp.GetValue(AttachProperty);
-        }
 
         public static string GetPassword(DependencyObject dp)
         {
