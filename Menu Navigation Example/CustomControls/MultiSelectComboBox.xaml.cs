@@ -47,10 +47,10 @@ namespace Menu_Navigation_Example.CustomControls
 
         public static readonly DependencyProperty SelectedValuesProperty =
                 DependencyProperty.Register("SelectedValues",
-                    typeof(List<string?>),
-                    typeof(MultiSelectComboBox),
-                    new FrameworkPropertyMetadata(null,
-                        new PropertyChangedCallback(MultiSelectComboBox.OnSelectedValuesChanged)));
+                    typeof(string), 
+                    typeof(MultiSelectComboBox), new
+                    PropertyMetadata("", 
+                        new PropertyChangedCallback(OnSelectedValuesChanged)));
 
         public static readonly DependencyProperty SelectedValuePathProperty =
                 DependencyProperty.Register("SelectedValuePath",
@@ -98,9 +98,12 @@ namespace Menu_Navigation_Example.CustomControls
             }
         }
 
-        public List<string?> SelectedValues
+        public string SelectedValues
         {
-            get { return (List<string?>)GetValue(SelectedValuesProperty); }
+            get { 
+                var a= (string)GetValue(SelectedValuesProperty);
+                return a;
+            }
             set
             {
                 SetValue(SelectedValuesProperty, value);
@@ -150,17 +153,8 @@ namespace Menu_Navigation_Example.CustomControls
 
         private void CheckBox_Click(object sender, RoutedEventArgs e)
         {
-            CheckBox clickedBox = (CheckBox)sender;
-            int _selectedCount = 0;
-            foreach (Node s in _nodeList)
-            {
-                if (s.IsSelected)
-                    _selectedCount++;
-            }
-
             SetSelectedItems();
             SetText();
-
         }
         #endregion
 
@@ -199,16 +193,16 @@ namespace Menu_Navigation_Example.CustomControls
 
         private void SelectValuesNodes()
         {
-            if (SelectedValues == null || SelectedValues.Count == 0)
+            if (string.IsNullOrEmpty(SelectedValues?.ToString()) || string.IsNullOrWhiteSpace(SelectedValues?.ToString()))
                 return;
-       
-            var selectedNodes = _nodeList.Where(x => SelectedValues.Contains(x.Key)).ToList();
+
+            List<string?> selectedValueLst = SelectedValues?.ToString().Split(',').ToList();
+            var selectedNodes = _nodeList.Where(x => selectedValueLst.Contains(x.Key)).ToList();
 
             if (SelectedItems == null)
             {
                 var listType = this.ItemsSource.GetType();
                 var instance = Activator.CreateInstance(listType);
-                //typeof()
                 SelectedItems = (IList)instance;
             }
 
@@ -249,8 +243,8 @@ namespace Menu_Navigation_Example.CustomControls
                 SelectedItems = (IList)instance;
             }
 
+            List<string?> selectedValueLst = new List<string?>();
             SelectedItems.Clear();
-            SelectedValues.Clear();
             foreach (Node node in _nodeList)
             {
                 if (node.IsSelected)
@@ -259,11 +253,13 @@ namespace Menu_Navigation_Example.CustomControls
                     {
                         var item = this.ItemsSource.Cast<object>().FirstOrDefault(x => x.GetType().GetProperties().FirstOrDefault(y => y.Name == SelectedValuePath).GetValue(x)?.ToString() == node.Key);
                         SelectedItems.Add(item);
-                        SelectedValues.Add(node.Key);
+                        selectedValueLst.Add(node.Key);
                     }
 
                 }
             }
+
+            SelectedValues = string.Join(',',selectedValueLst);
         }
         #endregion
     }

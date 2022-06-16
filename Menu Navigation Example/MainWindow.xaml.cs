@@ -72,18 +72,21 @@ namespace Menu_Navigation_Example
                 }
             };
 
-            SelectedItems = new List<string?>()
-            {
-                "Bangalore",
-                "Coimbatore"
-            };
+            ValueSelect = "Coimbatore,Bangalore";
+
+
             InitializeComponent();
 
             this.DataContext = this;
         }
 
+        public string ValueSelect;
+        public string Text { get; set; }
+
         public List<MultiSelectComboBoxItem> Items { get; set; }
-        public List<string?> SelectedItems { get; set; }
+
+        public List<string?> SelectedValue;
+        public List<MultiSelectComboBoxItem> SelectedItems { get; set; }
         public List<MenuItemViewModel> MenuItems { get; set; }
 
         private void MenuDarkModeButton_Click(object sender, RoutedEventArgs e)
@@ -100,7 +103,9 @@ namespace Menu_Navigation_Example
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            var b = ValueSelect;
             var a = SelectedItems;
+            var c = Text;
         }
     }
 }
